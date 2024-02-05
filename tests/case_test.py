@@ -2,6 +2,8 @@ import pytest
 import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.firefox.options import Options
+
 
 @pytest.fixture(scope="class")
 def browser(request):
