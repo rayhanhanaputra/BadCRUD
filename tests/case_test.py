@@ -21,6 +21,7 @@ class TestContactManagement(unittest.TestCase):
 
     def test_1_add_new_contact(self):
         self.login()
+        time.sleep(5)
         self.browser.find_element(By.CSS_SELECTOR, '.btn.btn-primary.create-contact').click()
         self.browser.find_element(By.ID, 'name').send_keys("John Doe")
         self.browser.find_element(By.ID, 'email').send_keys("john.doe@example.com")
@@ -31,6 +32,7 @@ class TestContactManagement(unittest.TestCase):
 
     def test_2_delete_contact(self):
         self.login()
+        time.sleep(5)
         self.browser.find_element(By.CSS_SELECTOR, '.btn.btn-sm.btn-outline.btn-danger').click()
         alert = self.browser.switch_to.alert
         alert.accept()
@@ -38,6 +40,7 @@ class TestContactManagement(unittest.TestCase):
 
     def test_3_change_profile_picture(self):
         self.login()
+        time.sleep(5)
         self.browser.find_element(By.CSS_SELECTOR, 'a.btn.btn-primary[href="profil.php"]').click()
         file_path = os.path.join(os.getcwd(), 'tests','image_test.jpg')
         self.browser.find_element(By.ID, 'formFile').send_keys(file_path)
@@ -46,6 +49,7 @@ class TestContactManagement(unittest.TestCase):
 
     def test_4_update_contact(self):
         self.login()
+        time.sleep(5)
         elements = self.browser.find_elements(By.CSS_SELECTOR, 'a.btn-outline.btn-success')
         if elements:
             elements[-1].click()
@@ -62,6 +66,7 @@ class TestContactManagement(unittest.TestCase):
 
     def test_5_test_xss_security(self):
         self.login()
+        time.sleep(5)
         self.browser.find_element(By.CSS_SELECTOR, 'a.btn.btn-warning[href="xss.php"]').click()
         self.browser.find_element(By.NAME, 'thing').send_keys("<script>alert(1)</script>")
         self.browser.find_element(By.NAME, 'submit').click()
@@ -69,9 +74,9 @@ class TestContactManagement(unittest.TestCase):
         try:
             alert = self.browser.switch_to.alert
             alert.accept()
-            pytest.fail("XSS vulnerability detected!")
+            self.fail("XSS vulnerability detected!")
         except:
-            raise pytest.fail.Exception("XSS vulnerability detected!")
+            raise self.fail.Exception("XSS vulnerability detected!")
 
     @classmethod
     def tearDownClass(cls):
