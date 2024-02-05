@@ -15,11 +15,11 @@ jobs:
       - name: Create isolated network
         run: docker network create --driver bridge isolated
 
-      - name: Deploy AUT
+      - name: Build AUT
         run: docker build -t my-php-site:latest .
 
-      - name: Run AUT
-        run: docker run --network=isolated -p 80:80 --name docker-apache -t -d my-php-site:latest
+      - name: Run AUT using docker-compose
+        run: docker-compose up -d
 
       - name: Get AUT URL
         run: |
@@ -42,7 +42,8 @@ jobs:
         run: pip install -U selenium pytest pytest-xdist
 
       - name: Run tests using pytest
-        run: pytest -v -n 5 tests/
+        run: |
+          pytest -v -n 5 tests/
 
       - name: stop docker
         run: docker stop docker-apache
