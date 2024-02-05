@@ -22,8 +22,7 @@ class TestContactManagement(unittest.TestCase):
 
     def test_1_add_new_contact(self):
         self.login()
-        time.sleep(5)
-        self.browser.find_element(By.CSS_SELECTOR, '.btn.btn-primary.create-contact').click()
+        self.browser.get(f"{self.url}/create.php")
         self.browser.find_element(By.ID, 'name').send_keys("John Doe")
         self.browser.find_element(By.ID, 'email').send_keys("john.doe@example.com")
         self.browser.find_element(By.ID, 'phone').send_keys("123456789")
@@ -33,27 +32,27 @@ class TestContactManagement(unittest.TestCase):
 
     def test_2_delete_contact(self):
         self.login()
-        time.sleep(5)
-        self.browser.find_element(By.CSS_SELECTOR, '.btn.btn-sm.btn-outline.btn-danger').click()
-        alert = self.browser.switch_to.alert
-        alert.accept()
+        actions_section = self.browser.find_element(By.XPATH, "//tr[@role='row'][1]//td[contains(@class, 'actions')]")
+        delete_button = actions_section.find_element(By.XPATH, ".//a[contains(@class, 'btn-danger')]")
+        delete_button.click()
+        self.browser.switch_to.alert.accept()
         assert self.browser.current_url == f"{self.url}/index.php"
 
     def test_3_change_profile_picture(self):
         self.login()
+        self.browser.get(f"{self.url}/profile.php")
         time.sleep(5)
-        self.browser.find_element(By.CSS_SELECTOR, 'a.btn.btn-primary[href="profil.php"]').click()
         file_path = os.path.join(os.getcwd(), 'tests','image_test.jpg')
-        self.browser.find_element(By.ID, 'formFile').send_keys(file_path)
+        file_input = self.browser.find_element(By.ID, 'formFile')
+        file_input.send_keys(file_path)
         self.browser.find_element(By.CSS_SELECTOR, 'button[type="submit"]').click()
         assert self.browser.current_url == f"{self.url}/profil.php"
 
     def test_4_update_contact(self):
         self.login()
-        time.sleep(5)
-        elements = self.browser.find_elements(By.CSS_SELECTOR, 'a.btn-outline.btn-success')
-        if elements:
-            elements[-1].click()
+        actions_section = self.browser.find_element(By.XPATH, "//tr[@role='row'][1]//td[contains(@class, 'actions')]")
+        update_button = actions_section.find_element(By.XPATH, ".//a[contains(@class, 'btn-success')]")
+        update_button.click()
         self.browser.find_element(By.ID, 'name').clear()
         self.browser.find_element(By.ID, 'name').send_keys("Jane Doe")
         self.browser.find_element(By.ID, 'email').clear()
@@ -67,8 +66,7 @@ class TestContactManagement(unittest.TestCase):
 
     def test_5_test_xss_security(self):
         self.login()
-        time.sleep(5)
-        self.browser.find_element(By.CSS_SELECTOR, 'a.btn.btn-warning[href="xss.php"]').click()
+        self.browser.get(f"{self.url}/xss.php")
         self.browser.find_element(By.NAME, 'thing').send_keys("<script>alert(1)</script>")
         self.browser.find_element(By.NAME, 'submit').click()
         
