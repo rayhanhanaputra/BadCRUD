@@ -2,7 +2,7 @@
 
 function pdo_connect()
 {
-    $DATABASE_HOST = 'localhost';
+    $DATABASE_HOST = 'mysql';
     $DATABASE_USER = 'root';
     $DATABASE_PASS = 'root';
     $DATABASE_NAME = 'badcrud';
