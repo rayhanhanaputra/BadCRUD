@@ -38,5 +38,11 @@ jobs:
       - name: Check the Hub
         run: curl http://localhost:4444/ui
 
+      - name: Install Selenium client
+        run: pip install -U selenium pytest pytest-xdist
+
+      - name: Run tests using pytest
+        run: pytest -v -n 5 tests/
+
       - name: stop docker
         run: docker stop docker-apache
