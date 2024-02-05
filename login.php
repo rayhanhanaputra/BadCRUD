@@ -25,7 +25,7 @@
             $_SESSION['user'] = $user;
             header("location: index.php");
         } else {
-            $notif = "Wrong usename or password";
+            $notif = "Wrong username or password";
         }
     }
 
