@@ -50,10 +50,13 @@ jobs:
         with:
           name: Screenshot1
           path: screenshot1.png
+        with:
           name: Screenshot2
           path: screenshot2.png
+        with:
           name: Screenshot3
           path: screenshot3.png
+        with:
           name: Screenshot4
           path: screenshot4.png
 
