@@ -29,6 +29,7 @@ class TestContactManagement(unittest.TestCase):
     def test_1_add_new_contact(self):
         self.login()
         self.browser.get(f"{self.url}/create.php")
+        self.browser.save_screenshot('screenshot1.png')
         self.browser.find_element(By.ID, 'name').send_keys("John Doe")
         self.browser.find_element(By.ID, 'email').send_keys("john.doe@example.com")
         self.browser.find_element(By.ID, 'phone').send_keys("123456789")
@@ -38,6 +39,7 @@ class TestContactManagement(unittest.TestCase):
 
     def test_2_delete_contact(self):
         self.login()
+        self.browser.save_screenshot('screenshot2.png')
         actions_section = self.browser.find_element(By.XPATH, "//tr[@role='row'][1]//td[contains(@class, 'actions')]")
         delete_button = actions_section.find_element(By.XPATH, ".//a[contains(@class, 'btn-danger')]")
         delete_button.click()
@@ -47,6 +49,7 @@ class TestContactManagement(unittest.TestCase):
     def test_3_change_profile_picture(self):
         self.login()
         self.browser.get(f"{self.url}/profil.php")
+        self.browser.save_screenshot('screenshot3.png')
         file_path = os.path.join(os.getcwd(), 'tests','image_test.jpg')
         self.browser.find_element(By.ID, 'formFile').send_keys(file_path)
         self.browser.find_element(By.CSS_SELECTOR, 'button[type="submit"]').click()
@@ -54,6 +57,7 @@ class TestContactManagement(unittest.TestCase):
 
     def test_4_update_contact(self):
         self.login()
+        self.browser.save_screenshot('screenshot4.png')
         actions_section = self.browser.find_element(By.XPATH, "//tr[@role='row'][1]//td[contains(@class, 'actions')]")
         update_button = actions_section.find_element(By.XPATH, ".//a[contains(@class, 'btn-success')]")
         update_button.click()
@@ -71,6 +75,7 @@ class TestContactManagement(unittest.TestCase):
     def test_5_test_xss_security(self):
         self.login() 
         self.browser.get(f"{self.url}/xss.php")
+        self.browser.save_screenshot('screenshot5.png')
         self.browser.find_element(By.NAME, 'thing').send_keys("<script>alert(1)</script>")
         self.browser.find_element(By.NAME, 'submit').click()
         

@@ -45,5 +45,17 @@ jobs:
         run: |
           pytest -v -n 5 tests/
 
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Screenshot1
+          path: screenshot1.png
+          name: Screenshot2
+          path: screenshot2.png
+          name: Screenshot3
+          path: screenshot3.png
+          name: Screenshot4
+          path: screenshot4.png
+
       - name: stop docker
         run: docker stop docker-apache
