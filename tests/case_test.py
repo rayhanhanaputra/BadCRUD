@@ -1,5 +1,6 @@
-import unittest, os
+import unittest, os, time
 from selenium import webdriver
+from selenium.common.exceptions import NoAlertPresentException
 from selenium.webdriver.common.by import By
 
 class TestContactManagement(unittest.TestCase):
@@ -75,8 +76,8 @@ class TestContactManagement(unittest.TestCase):
             alert = self.browser.switch_to.alert
             alert.accept()
             self.fail("XSS vulnerability detected!")
-        except:
-            raise self.fail.Exception("XSS vulnerability detected!")
+        except NoAlertPresentException:
+            pass
 
     @classmethod
     def tearDownClass(cls):
