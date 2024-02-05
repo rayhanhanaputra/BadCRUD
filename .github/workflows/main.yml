@@ -13,14 +13,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Create isolated network
-        run: docker network create --driver bridge isolated      
+        run: docker network create --driver bridge isolated
 
       - name: Deploy AUT
         run: docker build -t my-php-site:latest .
 
-      - name: Run AUT 
+      - name: Run AUT
         run: docker run --network=isolated -p 80:80 --name docker-apache -t -d my-php-site:latest
-      
+
       - name: Get AUT URL
         run: |
           URL=http://$(ip -f inet -o addr show docker0 | awk '{print $4}' | cut -d '/' -f 1)
@@ -28,6 +28,15 @@ jobs:
 
       - name: Check AUT URL
         run: curl ${{ env.URL }}
-    
+
+      - name: Selenium Preparation
+        run: docker run --network=isolated -d -p 4444:4444 -p 7900:7900 -v /dev/shm:/dev/shm --name firefox-standalone selenium/standalone-firefox:latest
+
+      - name: Wait for Selenium Hub
+        run: sh wait.sh
+
+      - name: Check the Hub
+        run: curl http://localhost:4444/ui
+
       - name: stop docker
         run: docker stop docker-apache
