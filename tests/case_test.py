@@ -5,7 +5,9 @@ from selenium.webdriver.common.by import By
 
 @pytest.fixture(scope="class")
 def browser(request):
-    browser = webdriver.Firefox()
+    options = Options()
+    options.headless = True
+    browser = webdriver.Firefox(options=options)
     request.cls.browser = browser
     yield browser
     browser.quit()
