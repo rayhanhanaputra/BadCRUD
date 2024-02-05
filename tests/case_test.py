@@ -25,7 +25,10 @@ class TestContactManagement(unittest.TestCase):
         self.browser.find_element(By.XPATH, "//button[@type='submit']").click()
 
     def test_1_add_new_contact(self):
-        self.login()
+        self.browser.get(f"{self.url}/login.php")
+        self.browser.find_element(By.ID, "inputUsername").send_keys("admin")
+        self.browser.find_element(By.ID, "inputPassword").send_keys("nimda666!")
+        self.browser.find_element(By.XPATH, "//button[@type='submit']").click()
         self.browser.get(f"{self.url}/create.php")
         WebDriverWait(self.browser, 10).until(
             EC.presence_of_element_located((By.ID, 'name'))
