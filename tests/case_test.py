@@ -1,7 +1,11 @@
-import unittest, os, time
+import unittest
+import os
+import time
 from selenium import webdriver
-from selenium.common.exceptions import NoAlertPresentException
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoAlertPresentException
 
 class TestContactManagement(unittest.TestCase):
     @classmethod
@@ -23,6 +27,9 @@ class TestContactManagement(unittest.TestCase):
     def test_1_add_new_contact(self):
         self.login()
         self.browser.get(f"{self.url}/create.php")
+        WebDriverWait(self.browser, 10).until(
+            EC.presence_of_element_located((By.ID, 'name'))
+        )
         self.browser.find_element(By.ID, 'name').send_keys("John Doe")
         self.browser.find_element(By.ID, 'email').send_keys("john.doe@example.com")
         self.browser.find_element(By.ID, 'phone').send_keys("123456789")
@@ -32,17 +39,24 @@ class TestContactManagement(unittest.TestCase):
 
     def test_2_delete_contact(self):
         self.login()
+        WebDriverWait(self.browser, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//tr[@role='row'][1]//td[contains(@class, 'actions')]"))
+        )
         actions_section = self.browser.find_element(By.XPATH, "//tr[@role='row'][1]//td[contains(@class, 'actions')]")
-        delete_button = actions_section.find_element(By.XPATH, ".//a[contains(@class, 'btn-danger')]")
+        delete_button = WebDriverWait(actions_section, 10).until(
+            EC.presence_of_element_located((By.XPATH, ".//a[contains(@class, 'btn-danger')]"))
+        )
         delete_button.click()
         self.browser.switch_to.alert.accept()
         assert self.browser.current_url == f"{self.url}/index.php"
 
     def test_3_change_profile_picture(self):
         self.login()
-        self.browser.get(f"{self.url}/profile.php")
-        time.sleep(5)
-        file_path = os.path.join(os.getcwd(), 'tests','image_test.jpg')
+        self.browser.get(f"{self.url}/profil.php")
+        WebDriverWait(self.browser, 10).until(
+            EC.presence_of_element_located((By.ID, 'formFile'))
+        )
+        file_path = os.path.join(os.getcwd(), 'tests', 'image_test.jpg')
         file_input = self.browser.find_element(By.ID, 'formFile')
         file_input.send_keys(file_path)
         self.browser.find_element(By.CSS_SELECTOR, 'button[type="submit"]').click()
@@ -50,9 +64,17 @@ class TestContactManagement(unittest.TestCase):
 
     def test_4_update_contact(self):
         self.login()
+        WebDriverWait(self.browser, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//tr[@role='row'][1]//td[contains(@class, 'actions')]"))
+        )
         actions_section = self.browser.find_element(By.XPATH, "//tr[@role='row'][1]//td[contains(@class, 'actions')]")
-        update_button = actions_section.find_element(By.XPATH, ".//a[contains(@class, 'btn-success')]")
+        update_button = WebDriverWait(actions_section, 10).until(
+            EC.presence_of_element_located((By.XPATH, ".//a[contains(@class, 'btn-success')]"))
+        )
         update_button.click()
+        WebDriverWait(self.browser, 10).until(
+            EC.presence_of_element_located((By.ID, 'name'))
+        )
         self.browser.find_element(By.ID, 'name').clear()
         self.browser.find_element(By.ID, 'name').send_keys("Jane Doe")
         self.browser.find_element(By.ID, 'email').clear()
@@ -67,6 +89,9 @@ class TestContactManagement(unittest.TestCase):
     def test_5_test_xss_security(self):
         self.login()
         self.browser.get(f"{self.url}/xss.php")
+        WebDriverWait(self.browser, 10).until(
+            EC.presence_of_element_located((By.NAME, 'thing'))
+        )
         self.browser.find_element(By.NAME, 'thing').send_keys("<script>alert(1)</script>")
         self.browser.find_element(By.NAME, 'submit').click()
         
