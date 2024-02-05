@@ -1,28 +1,17 @@
-import pytest
-import os
+import unittest, os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.firefox.options import Options
 
-
-@pytest.fixture(scope="class")
-def browser(request):
-    options = Options()
-    options.headless = True
-    browser = webdriver.Firefox(options=options)
-    request.cls.browser = browser
-    yield browser
-    browser.quit()
-
-@pytest.fixture(scope="class")
-def base_url():
-    return os.environ.get('URL', "http://localhost/BadCRUD")
-
-@pytest.mark.usefixtures("browser")
-class TestContactManagement:
-    @pytest.fixture(autouse=True)
-    def setup(self, base_url):
-        self.url = base_url
+class TestContactManagement(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        option = webdriver.FirefoxOptions()
+        option.add_argument('--headless')
+        cls.browser = webdriver.Firefox(options=option)
+        try:
+            cls.url = os.environ['URL']
+        except:
+            cls.url = "http://localhost/BadCRUD"
 
     def login(self):
         self.browser.get(f"{self.url}/login.php")
